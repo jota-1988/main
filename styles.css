@@ -213,8 +213,8 @@ em {
   background: linear-gradient(135deg, var(--yellow) 0%, #f8df64 118%);
   align-items: start;
   display: grid;
-  grid-template-columns: minmax(0, 0.86fr) minmax(320px, 1.14fr);
-  min-height: 148svh;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 42vw);
+  min-height: 100svh;
   padding: 68px 0 0 var(--page-pad);
   position: relative;
 }
@@ -226,8 +226,7 @@ em {
   justify-content: center;
   min-height: calc(100svh - 68px);
   padding: 4rem clamp(2rem, 5vw, 6rem) 5.5rem 0;
-  position: sticky;
-  top: 68px;
+  position: relative;
 }
 
 .hero-logo-lockup {
@@ -316,21 +315,9 @@ em {
   position: relative;
 }
 
-.parallax-media {
-  inset: 0;
-  overflow: hidden;
-  position: absolute;
-}
-
 .parallax-image {
-  height: 124%;
-  left: 0;
-  max-width: none;
-  object-fit: cover;
-  position: absolute;
-  top: -12%;
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
+  display: block;
+  height: auto;
   width: 100%;
 }
 
@@ -338,18 +325,13 @@ em {
   align-items: center;
   background: var(--yellow);
   border-top: 1px solid var(--ink);
-  bottom: 0;
   display: flex;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.6rem;
   justify-content: space-between;
-  left: 0;
   letter-spacing: 0.08em;
   padding: 0.72rem 0.85rem;
-  position: absolute;
-  right: 0;
   text-transform: uppercase;
-  z-index: 2;
 }
 
 .parallax-frame figcaption em {
@@ -359,9 +341,8 @@ em {
 .hero-portrait {
   align-self: start;
   background: var(--brown);
-  height: calc(100svh - 68px);
-  position: sticky;
-  top: 68px;
+  justify-self: end;
+  width: min(100%, calc((100svh - 110px) * 1087 / 1447));
 }
 
 .scroll-cue {
@@ -488,10 +469,6 @@ em {
   text-transform: uppercase;
 }
 
-.spotify-topline span:last-child {
-  color: rgba(241, 207, 40, 0.5);
-}
-
 .spotify-shell iframe {
   border: 0;
   border-radius: 12px;
@@ -551,17 +528,15 @@ em {
   align-items: start;
   background: linear-gradient(135deg, var(--yellow) 0%, #f8df64 135%);
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
-  min-height: 130svh;
+  grid-template-columns: minmax(300px, 0.78fr) minmax(360px, 1.22fr);
+  min-height: auto;
   position: relative;
 }
 
 .about-image-wrap {
   align-self: start;
   background: var(--brown);
-  height: calc(100svh - 68px);
-  position: sticky;
-  top: 68px;
+  width: 100%;
 }
 
 .about-copy {
@@ -842,9 +817,8 @@ footer p:nth-of-type(2) {
   }
 
   .hero-portrait {
-    height: 78svh;
-    position: relative;
-    top: auto;
+    justify-self: stretch;
+    width: 100%;
   }
 
   .scroll-cue {
@@ -875,9 +849,7 @@ footer p:nth-of-type(2) {
   }
 
   .about-image-wrap {
-    height: 68svh;
-    position: relative;
-    top: auto;
+    width: 100%;
   }
 
   .about-copy {
@@ -972,7 +944,7 @@ footer p:nth-of-type(2) {
   }
 
   .hero-portrait {
-    height: 73svh;
+    width: 100%;
   }
 
   .music-section {
@@ -1004,7 +976,7 @@ footer p:nth-of-type(2) {
   }
 
   .about-image-wrap {
-    height: 61svh;
+    width: 100%;
   }
 
   .about-copy {
@@ -1060,7 +1032,4 @@ footer p:nth-of-type(2) {
     transition-duration: 0.01ms !important;
   }
 
-  .parallax-image {
-    transform: translate3d(0, 0, 0) !important;
-  }
 }
