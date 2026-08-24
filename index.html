@@ -1,312 +1,609 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#f1cf28" />
-    <meta
-      name="description"
-      content="Sitio oficial de Jota 1988 — músico electrónico, productor, live performer y artista digital de Buenos Aires."
-    />
-    <meta
-      name="keywords"
-      content="Jota 1988, electronic music, techno, downtempo, live performer, artista digital, Buenos Aires"
-    />
-    <meta property="og:title" content="Jota 1988 — Músico electrónico &amp; Live Performer" />
-    <meta
-      property="og:description"
-      content="Música electrónica construida desde la improvisación, la textura y el instinto."
-    />
-    <meta property="og:type" content="website" />
-    <title>Jota 1988 — Músico electrónico &amp; Live Performer</title>
-    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <header class="site-header" aria-label="Navegación principal">
-      <a class="wordmark" href="#top" aria-label="Jota 1988 — inicio">
-        JOTA 1988<span>.</span>
-      </a>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jota 1988 — Músico electrónico &amp; Live Performer</title>
+<meta name="description" content="Sitio oficial de Jota 1988 — músico electrónico, productor y live performer de Buenos Aires.">
+<meta name="theme-color" content="#0c0c0d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c0d;
+    --bg-alt:#131313;
+    --fg:#f4f1e9;
+    --fg-dim:#8f8b81;
+    --yellow:#f1cf28;
+    --red:#ff4d3d;
+    --line:rgba(244,241,233,.12);
+    --gap:clamp(1.5rem,4vw,3rem);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
+  }
+  ::selection{background:var(--yellow);color:#0c0c0d}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  :focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
 
-      <nav class="desktop-nav" aria-label="Secciones de la página">
-        <a href="#music">Música</a>
-        <a href="#about">Bio</a>
-        <a href="#contact">Contacto</a>
-      </nav>
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--fg-dim);
+  }
+  h1,h2,h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    line-height:1.02;
+    letter-spacing:-.01em;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 clamp(1.25rem,5vw,3rem)}
 
-      <div class="header-actions">
-        <div class="header-socials" aria-label="Redes y plataformas">
-          <a
-            href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Spotify"
-          >
-            <img src="./assets/icons/spotify.svg" alt="" width="15" height="15" aria-hidden="true" />
-          </a>
-          <a
-            href="https://jota1988.bandcamp.com/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Bandcamp"
-          >
-            <img src="./assets/icons/bandcamp.svg" alt="" width="15" height="15" aria-hidden="true" />
-          </a>
-          <a
-            href="https://www.instagram.com/jota.1988/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Instagram"
-          >
-            <img src="./assets/icons/instagram.svg" alt="" width="15" height="15" aria-hidden="true" />
-          </a>
-          <a
-            href="https://youtube.com/theaudioexporter"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="YouTube"
-          >
-            <img src="./assets/icons/youtube.svg" alt="" width="15" height="15" aria-hidden="true" />
-          </a>
+  /* ambient particle canvas */
+  #bgCanvas{
+    position:fixed;inset:0;width:100vw;height:100vh;z-index:0;
+    pointer-events:none;opacity:.55;
+  }
+
+  /* grain overlay */
+  .grain{
+    position:fixed;inset:0;pointer-events:none;z-index:40;
+    opacity:.045;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header, main, footer{position:relative;z-index:1}
+
+  /* progress bar */
+  .progress{
+    position:fixed;top:0;left:0;height:2px;width:0%;
+    background:linear-gradient(90deg,var(--yellow),var(--red));
+    z-index:60;transition:width .08s linear;
+  }
+
+  /* header */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.1rem clamp(1.25rem,5vw,3rem);
+    backdrop-filter:blur(10px);
+    background:rgba(12,12,13,.55);
+    border-bottom:1px solid var(--line);
+  }
+  .logo{font-family:'Space Grotesk';font-weight:700;font-size:1.05rem;letter-spacing:-.01em}
+  nav ul{display:flex;gap:1.8rem;list-style:none}
+  nav a{
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--fg-dim);position:relative;padding-bottom:4px;
+    transition:color .25s ease;
+  }
+  nav a::after{
+    content:'';position:absolute;left:0;bottom:0;height:1px;width:0;
+    background:var(--yellow);transition:width .3s ease;
+  }
+  nav a.active,nav a:hover{color:var(--fg)}
+  nav a.active::after{width:100%}
+  .nav-inner{display:flex;align-items:center;gap:2.5rem}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;font-size:.78rem;letter-spacing:.06em;
+    text-transform:uppercase;border:1px solid var(--fg);padding:.6rem 1.1rem;
+    transition:background .25s ease,color .25s ease,border-color .25s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--yellow);border-color:var(--yellow);color:#0c0c0d}
+  .menu-toggle{display:none;background:none;border:0;color:var(--fg);font-size:1.4rem;cursor:pointer}
+
+  /* hero */
+  .hero{
+    min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+    padding-top:6rem;position:relative;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.1fr .9fr;gap:var(--gap);align-items:center;
+  }
+  .hero h1{
+    font-family:'Archivo Black',sans-serif;
+    font-weight:400;
+    font-size:clamp(3.4rem,10.5vw,7.8rem);
+    letter-spacing:-.02em;
+    margin:.6rem 0 1rem;
+    cursor:default;
+  }
+  .hero h1 span{display:inline-block;transition:transform .25s ease,color .25s ease}
+  .hero h1:hover span{color:var(--yellow)}
+  .motto{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:clamp(.85rem,1.6vw,1.1rem);
+    color:var(--red);letter-spacing:.03em;
+    margin-bottom:1.4rem;
+  }
+  .hero-meta{color:var(--fg-dim);font-size:.95rem;margin-bottom:2.2rem}
+  .hero-meta strong{color:var(--fg);font-weight:500}
+  .hero-media{position:relative;aspect-ratio:4/5;overflow:hidden;border:1px solid var(--line)}
+  .hero-media img{width:100%;height:100%;object-fit:cover;will-change:transform}
+
+  /* section shell */
+  section{padding:clamp(5rem,10vw,8rem) 0;position:relative}
+  .section-head{display:flex;align-items:baseline;gap:1rem;margin-bottom:2.5rem}
+  .section-head .idx{font-family:'IBM Plex Mono';color:var(--yellow);font-size:.85rem}
+  h2{font-size:clamp(2rem,5vw,3.4rem);max-width:14ch}
+
+  /* music */
+  .music-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);align-items:start}
+  .music-grid p{color:var(--fg-dim);max-width:42ch;margin-bottom:1.8rem;font-size:1.05rem}
+  .embed-frame{border:1px solid var(--line);background:var(--bg-alt);padding:.5rem}
+  .embed-frame iframe{width:100%;height:352px;border:0;border-radius:2px}
+  .link-out{
+    display:inline-flex;align-items:center;gap:.5rem;margin-top:1.2rem;
+    font-family:'IBM Plex Mono';font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--fg);border-bottom:1px solid var(--fg-dim);padding-bottom:2px;
+    transition:border-color .25s ease,color .25s ease;
+  }
+  .link-out:hover{color:var(--yellow);border-color:var(--yellow)}
+
+  /* waveform divider */
+  .waveform{display:flex;align-items:flex-end;gap:4px;height:34px;margin:0 0 1rem}
+  .waveform i{
+    display:block;width:3px;background:var(--fg-dim);opacity:.5;
+    animation:wave 1.4s ease-in-out infinite;
+  }
+  @keyframes wave{0%,100%{height:6px}50%{height:28px}}
+
+  /* discography */
+  .discog{overflow:hidden}
+  .discog-marquee{
+    position:absolute;top:0;left:0;width:100%;height:190px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+    opacity:.5;pointer-events:none;
+  }
+  .discog-track{display:flex;gap:1rem;width:max-content;animation:scroll-left 38s linear infinite}
+  .discog-track .mini{width:130px;height:130px;flex:none;margin-top:30px}
+  .discog-note{color:var(--fg-dim);font-size:.85rem;margin:-1rem 0 2rem;max-width:48ch}
+  @keyframes scroll-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  .release-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem;margin-top:2rem;position:relative;
+  }
+  .release{border:1px solid var(--line);background:var(--bg-alt);transition:border-color .25s ease,transform .3s ease}
+  .release:hover{border-color:var(--yellow);transform:translateY(-4px)}
+  .release:hover .release-cover img{transform:scale(1.06)}
+  .release-cover{aspect-ratio:1/1;position:relative;display:flex;align-items:flex-end;padding:.6rem;overflow:hidden;background:#151515}
+  .release-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+  .release-cover .cat{
+    position:relative;z-index:1;
+    font-family:'IBM Plex Mono';font-size:.65rem;letter-spacing:.05em;
+    color:rgba(12,12,13,.7);background:rgba(244,241,233,.88);
+    padding:.15rem .4rem;
+  }
+  .release-info{padding:.8rem .9rem 1rem}
+  .release-info h3{font-size:.92rem;font-weight:700;margin-bottom:.25rem;line-height:1.25}
+  .release-info p{font-family:'IBM Plex Mono';font-size:.7rem;color:var(--fg-dim);letter-spacing:.03em}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:var(--gap);align-items:start}
+  .about-media{aspect-ratio:3/4;overflow:hidden;border:1px solid var(--line)}
+  .about-media img{width:100%;height:100%;object-fit:cover}
+  .about-copy p{color:var(--fg-dim);margin-bottom:1.2rem;max-width:56ch;font-size:1.02rem}
+  .practice{margin-top:2.2rem;padding-top:2rem;border-top:1px solid var(--line)}
+  .practice p{color:var(--fg-dim);margin-bottom:1rem;font-size:.95rem}
+  .tags{display:flex;flex-wrap:wrap;gap:.6rem}
+  .tags span{
+    font-family:'IBM Plex Mono';font-size:.75rem;letter-spacing:.04em;text-transform:uppercase;
+    border:1px solid var(--line);padding:.45rem .9rem;color:var(--fg-dim);
+  }
+
+  /* contact */
+  .contact h2{max-width:none;font-size:clamp(2.6rem,8vw,5.5rem);margin-bottom:2.5rem}
+  .email-link{
+    font-family:'Space Grotesk';font-weight:700;font-size:clamp(1.3rem,3.5vw,2rem);
+    display:inline-block;border-bottom:2px solid var(--yellow);padding-bottom:.2rem;
+    margin-bottom:3rem;
+  }
+  .email-link:hover{color:var(--yellow)}
+  .social-row{display:flex;gap:1.6rem;flex-wrap:wrap}
+  .social-row a{
+    display:flex;align-items:center;gap:.5rem;
+    font-family:'IBM Plex Mono';font-size:.8rem;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--fg-dim);transition:color .25s ease;
+  }
+  .social-row a:hover{color:var(--yellow)}
+  .social-row svg{width:18px;height:18px;stroke:currentColor;fill:none}
+
+  footer{
+    border-top:1px solid var(--line);padding:2.2rem 0;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  }
+  footer p{color:var(--fg-dim);font-size:.85rem}
+  .to-top{font-family:'IBM Plex Mono';font-size:.78rem;color:var(--fg-dim);letter-spacing:.05em}
+  .to-top:hover{color:var(--yellow)}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in-view{opacity:1;transform:translateY(0)}
+  .reveal.d1{transition-delay:.08s}
+  .reveal.d2{transition-delay:.16s}
+  .reveal.d3{transition-delay:.24s}
+
+  @media (max-width:860px){
+    .hero-grid,.music-grid,.about-grid{grid-template-columns:1fr}
+    .hero-media{order:-1;aspect-ratio:16/10}
+    nav ul{display:none}
+    .menu-toggle{display:block}
+    .nav-inner{gap:1rem}
+    nav.open ul{
+      display:flex;flex-direction:column;position:fixed;top:64px;left:0;right:0;
+      background:var(--bg);padding:1.5rem clamp(1.25rem,5vw,3rem);gap:1.2rem;
+      border-bottom:1px solid var(--line);z-index:55;
+    }
+    .release-grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width:640px){
+    .release-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:420px){
+    .release-grid{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal{opacity:1;transform:none;transition:none}
+    .waveform i{animation:none;height:16px}
+    .hero-media img{transform:none !important}
+    .discog-track{animation:none}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress"></div>
+
+<header>
+  <a href="#top" class="logo">JOTA 1988.</a>
+  <div class="nav-inner">
+    <nav id="nav">
+      <ul>
+        <li><a href="#music" data-nav>Música</a></li>
+        <li><a href="#discography" data-nav>Discografía</a></li>
+        <li><a href="#about" data-nav>Bio</a></li>
+        <li><a href="#contact" data-nav>Contacto</a></li>
+      </ul>
+    </nav>
+    <a class="btn" href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ" target="_blank" rel="noopener">Escuchar</a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="top">
+    <div class="wrap hero-grid">
+      <div>
+        <p class="eyebrow reveal">Músico electrónico — Live performer</p>
+        <h1 class="reveal d1"><span>JOTA</span> <span>1988</span></h1>
+        <p class="motto reveal d2">MUSIC IS PURE VOMIT FROM THE SOUL</p>
+        <p class="hero-meta reveal d2"><strong>Buenos Aires, Argentina</strong> · Techno · Downtempo · Experimentación</p>
+        <a href="#music" class="btn reveal d3">↓ Escuchar</a>
+      </div>
+      <div class="hero-media reveal d2">
+        <img id="heroImg" src="https://jota-1988.github.io/main/assets/images/jota-portrait.webp" alt="Retrato de Jota 1988 frente a cámara">
+      </div>
+    </div>
+  </section>
+
+  <section id="music">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="idx">01</span>
+        <h2>Materia digital.<br>Pulso orgánico.</h2>
+      </div>
+      <div class="waveform reveal" aria-hidden="true">
+        <i style="animation-delay:.0s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i>
+        <i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.05s"></i>
+        <i style="animation-delay:.25s"></i><i style="animation-delay:.12s"></i>
+      </div>
+      <div class="music-grid">
+        <div class="reveal">
+          <p>Música electrónica construida desde la improvisación, la textura y el choque entre las máquinas y el instinto.</p>
         </div>
-        <a
-          class="header-listen"
-          href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ"
-          target="_blank"
-          rel="noreferrer"
-        >
-          Escuchar <span aria-hidden="true">↗</span>
+        <div class="reveal d1">
+          <div class="embed-frame">
+            <iframe src="https://open.spotify.com/embed/artist/7pJDetGhrQ6zCsnNLUoICQ?utm_source=generator&theme=0" title="Jota 1988 en Spotify" allow="encrypted-media"></iframe>
+          </div>
+          <a class="link-out" href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ" target="_blank" rel="noopener">Abrir perfil completo ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="discography" class="discog">
+    <div class="discog-marquee" aria-hidden="true">
+      <div class="discog-track" id="marqueeTrack">
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3451192207_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1840631649_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3347776078_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3885183531_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3957326765_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1986273898_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1564892158_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a0784480009_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3133885459_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a0462260610_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a2310178251_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a2745283676_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1617075821_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1180904571_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3451192207_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1840631649_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3347776078_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3885183531_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3957326765_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1986273898_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1564892158_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a0784480009_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a3133885459_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a0462260610_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a2310178251_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a2745283676_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1617075821_5.jpg" alt="" loading="lazy"></div>
+        <div class="release-cover mini"><img src="https://f4.bcbits.com/img/a1180904571_5.jpg" alt="" loading="lazy"></div>
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="idx">02</span>
+        <h2>Discografía en Bandcamp.</h2>
+      </div>
+      <p class="discog-note reveal">Catorce lanzamientos entre 2013 y 2023 — desde Le Pig, mi primera banda, hasta mis tracks más recientes. Portadas y datos tomados directo de Bandcamp.</p>
+      <div class="release-grid">
+        <a class="release reveal" href="https://jota1988.bandcamp.com/track/asongthathasneverhadaname" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a3451192207_5.jpg" alt="Portada de asongthathasneverhadaname" loading="lazy"><span class="cat">JOTA—01</span></div>
+          <div class="release-info"><h3>asongthathasneverhadaname</h3><p>Track · 2023</p></div>
+        </a>
+        <a class="release reveal d1" href="https://jota1988.bandcamp.com/album/puna" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a1840631649_5.jpg" alt="Portada de Puna" loading="lazy"><span class="cat">JOTA—02</span></div>
+          <div class="release-info"><h3>Puna</h3><p>Álbum · 2023</p></div>
+        </a>
+        <a class="release reveal d2" href="https://jota1988.bandcamp.com/album/time-drain-all-hate" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a3347776078_5.jpg" alt="Portada de Time Drain All Hate" loading="lazy"><span class="cat">JOTA—03</span></div>
+          <div class="release-info"><h3>Time Drain All Hate</h3><p>Álbum · 7 tracks · 2023</p></div>
+        </a>
+        <a class="release reveal" href="https://jota1988.bandcamp.com/album/-" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a3885183531_5.jpg" alt="Portada de 緊張-夢" loading="lazy"><span class="cat">JOTA—04</span></div>
+          <div class="release-info"><h3>緊張-夢</h3><p>Álbum · 2 tracks · 2021</p></div>
+        </a>
+        <a class="release reveal d1" href="https://jota1988.bandcamp.com/album/grey" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a3957326765_5.jpg" alt="Portada de Grey" loading="lazy"><span class="cat">JOTA—05</span></div>
+          <div class="release-info"><h3>Grey</h3><p>Álbum · 9 tracks · 2021</p></div>
+        </a>
+        <a class="release reveal d2" href="https://jota1988.bandcamp.com/album/digital-heart" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a1986273898_5.jpg" alt="Portada de Digital Heart" loading="lazy"><span class="cat">JOTA—06</span></div>
+          <div class="release-info"><h3>Digital Heart</h3><p>Con Lu Mulligan · 2020</p></div>
+        </a>
+        <a class="release reveal" href="https://jota1988.bandcamp.com/album/one-upon-a-time" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a1564892158_5.jpg" alt="Portada de One Upon a Time" loading="lazy"><span class="cat">JOTA—07</span></div>
+          <div class="release-info"><h3>One Upon a Time</h3><p>Álbum · 8 tracks · 2020</p></div>
+        </a>
+        <a class="release reveal d1" href="https://jota1988.bandcamp.com/album/le-temps" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a0784480009_5.jpg" alt="Portada de Le Temps" loading="lazy"><span class="cat">JOTA—08</span></div>
+          <div class="release-info"><h3>Le Temps</h3><p>Álbum · 4 tracks · 2020</p></div>
+        </a>
+        <a class="release reveal d2" href="https://jota1988.bandcamp.com/track/bdsm" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a3133885459_5.jpg" alt="Portada de BDSM" loading="lazy"><span class="cat">JOTA—09</span></div>
+          <div class="release-info"><h3>BDSM</h3><p>Con Imp3rium · 2019</p></div>
+        </a>
+        <a class="release reveal" href="https://jota1988.bandcamp.com/track/pir-tis" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a0462260610_5.jpg" alt="Portada de Pir &amp; Tis" loading="lazy"><span class="cat">JOTA—10</span></div>
+          <div class="release-info"><h3>Pir &amp; Tis</h3><p>Track · 2019</p></div>
+        </a>
+        <a class="release reveal d1" href="https://jota1988.bandcamp.com/track/dont-waste-my-time-ft-grace-portillo" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a2310178251_5.jpg" alt="Portada de Don't Waste My Time" loading="lazy"><span class="cat">JOTA—11</span></div>
+          <div class="release-info"><h3>Don't Waste My Time</h3><p>Ft. Grace Portillo · 2018</p></div>
+        </a>
+        <a class="release reveal d2" href="https://jota1988.bandcamp.com/album/hardsoft" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a2745283676_5.jpg" alt="Portada de HardSoft" loading="lazy"><span class="cat">JOTA—12</span></div>
+          <div class="release-info"><h3>HardSoft</h3><p>Con White Rabbit · 2018</p></div>
+        </a>
+        <a class="release reveal" href="https://jota1988.bandcamp.com/album/the-audio-exporter" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a1617075821_5.jpg" alt="Portada de The Audio Exporter" loading="lazy"><span class="cat">JOTA—13</span></div>
+          <div class="release-info"><h3>The Audio Exporter</h3><p>Álbum · 2 tracks · 2015</p></div>
+        </a>
+        <a class="release reveal d1" href="https://jota1988.bandcamp.com/album/the-fall-of-lust-remastered" target="_blank" rel="noopener">
+          <div class="release-cover"><img src="https://f4.bcbits.com/img/a1180904571_5.jpg" alt="Portada de The Fall Of Lust" loading="lazy"><span class="cat">JOTA—14</span></div>
+          <div class="release-info"><h3>The Fall Of Lust</h3><p>Le Pig · Remasterizado · 2013</p></div>
         </a>
       </div>
-    </header>
+      <a class="link-out reveal" href="https://jota1988.bandcamp.com/" target="_blank" rel="noopener" style="margin-top:2rem">Ver discografía completa en Bandcamp ↗</a>
+    </div>
+  </section>
 
-    <main>
-      <section class="hero" id="top" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="dual-eyebrow">
-            <span>Músico electrónico · Live performer</span>
-          </p>
-          <h1 class="hero-logo-lockup" id="hero-title">
-            <span class="sr-only">JOTA 1988</span>
-            <img
-              src="./assets/images/jota-1988-logo.png"
-              alt=""
-              width="1394"
-              height="940"
-              aria-hidden="true"
-            />
-          </h1>
-          <div class="hero-statement-wrap">
-            <p class="hero-statement hero-statement-original" lang="en">
-              MUSIC IS PURE VOMIT<br />FROM THE SOUL.
-            </p>
-          </div>
-          <div class="hero-meta" aria-label="Detalles del artista">
-            <span>Buenos Aires, Argentina</span>
-            <span>Techno · Downtempo · Experimentación</span>
-          </div>
-          <a class="scroll-cue" href="#music">
-            <span aria-hidden="true">↓</span> Escuchar
-          </a>
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="idx">03</span>
+        <h2>Toda una vida basada en la música.</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-media reveal">
+          <img src="https://jota-1988.github.io/main/assets/images/jota-studio.webp" alt="Jota 1988 en su estudio de música">
         </div>
-
-        <figure class="parallax-frame hero-portrait">
-          <img
-            class="parallax-image"
-            src="./assets/images/jota-portrait.webp"
-            alt="Retrato de Jota 1988 sentado frente a cámara"
-            width="1087"
-            height="1447"
-            fetchpriority="high"
-          />
-          <figcaption>
-            <span>Retrato</span>
-            <span>01 / 02</span>
-          </figcaption>
-        </figure>
-      </section>
-
-      <section class="music-section" id="music" aria-labelledby="music-title">
-        <div class="section-number" aria-hidden="true">01</div>
-        <div class="section-heading music-heading">
-          <p class="dual-eyebrow dual-eyebrow-dark">
-            <span>Música</span>
-          </p>
-          <div class="translated-title translated-title-dark">
-            <h2 id="music-title">Materia digital.<br />Pulso orgánico.</h2>
-          </div>
-          <div class="dual-copy dual-copy-dark">
-            <p>
-              Música electrónica construida desde la improvisación, la textura y
-              el choque entre las máquinas y el instinto.
-            </p>
-          </div>
-        </div>
-
-        <div class="spotify-shell">
-          <div class="spotify-topline">
-            <span>JOTA 1988 en Spotify</span>
-          </div>
-          <iframe
-            title="Escuchar a Jota 1988 en Spotify"
-            src="https://open.spotify.com/embed/artist/7pJDetGhrQ6zCsnNLUoICQ?utm_source=generator&amp;theme=0"
-            width="100%"
-            height="352"
-            loading="lazy"
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          ></iframe>
-          <a
-            class="spotify-fallback"
-            href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span>Abrir perfil completo</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-
-        <div class="platform-list" aria-label="Más lugares para escuchar">
-          <a href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ" target="_blank" rel="noreferrer">
-            <span>01</span>Spotify<span aria-hidden="true">↗</span>
-          </a>
-          <a href="https://jota1988.bandcamp.com/" target="_blank" rel="noreferrer">
-            <span>02</span>Bandcamp<span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </section>
-
-      <section class="about-section" id="about" aria-labelledby="about-title">
-        <figure class="parallax-frame about-image-wrap">
-          <img
-            class="parallax-image"
-            src="./assets/images/jota-studio.webp"
-            alt="Jota 1988 sentado en su estudio de música"
-            width="1087"
-            height="1447"
-            loading="lazy"
-          />
-          <figcaption>
-            <span>En proceso</span>
-            <span>02 / 02</span>
-          </figcaption>
-        </figure>
-
         <div class="about-copy">
-          <div class="section-number" aria-hidden="true">02</div>
-          <p class="dual-eyebrow">
-            <span>Sobre Jota 1988</span>
-          </p>
-          <div class="translated-title translated-title-light">
-            <h2 id="about-title">Toda una vida<br />basada en la música.</h2>
-          </div>
+          <p class="reveal">Empecé a hacer música con un pequeño teclado Casio que era de mi hermano mayor, cuando tenía cuatro o cinco años. Desde entonces todo fue aprendizaje y experimentación, hasta formar mi primera banda a los quince.</p>
+          <p class="reveal d1">Le Pig reunió los dos mundos que me obsesionaban: la música electrónica y el rock alternativo pesado. Ese cruce fue mi primer paso hacia la composición, la producción y, más tarde, el trabajo junto a otros artistas. <a class="link-out" href="https://jota1988.bandcamp.com/album/the-fall-of-lust-remastered" target="_blank" rel="noopener" style="margin:0;display:inline">Escuchar ese primer álbum ↗</a></p>
+          <p class="reveal d2">Después de la banda me fui metiendo en el downtempo, drum &amp; bass, hip hop y techno. La improvisación y el encuentro entre herramientas analógicas y procesos digitales siguen siendo el centro de mi forma de trabajar.</p>
+          <p class="reveal d2">Desde el techno más digital hasta el downtempo más orgánico, busco que cada track lleve algo real: más allá de la letra y del género, una sensación.</p>
 
-          <div class="bio-text">
-            <div class="bio-block bio-block-es">
-              <p>
-                Empecé a hacer música con un pequeño teclado Casio que era de mi
-                hermano mayor, cuando tenía cuatro o cinco años. Desde entonces
-                todo fue aprendizaje y experimentación, hasta formar mi primera
-                banda a los quince.
-              </p>
-              <p>
-                Le Pig reunió los dos mundos que me obsesionaban: la música
-                electrónica y el rock alternativo pesado. Ese cruce fue mi primer
-                paso hacia la composición, la producción y, más tarde, el trabajo
-                junto a otros artistas.
-              </p>
-              <p>
-                Después de la banda me fui metiendo en el downtempo, drum &amp;
-                bass, hip hop y techno. La improvisación y el encuentro entre
-                herramientas analógicas y procesos digitales siguen siendo el
-                centro de mi forma de trabajar.
-              </p>
-              <p class="bio-ending">
-                Desde el techno más digital hasta el downtempo más orgánico, busco
-                que cada track lleve algo real: más allá de la letra y del género,
-                una sensación.
-              </p>
-            </div>
-
-            <div class="bio-block bio-block-en" lang="en" aria-label="Traducción al inglés">
-              <p>
-                I started making music on my older brother's small Casio keyboard
-                when I was four or five. From there, everything became an
-                experiment in learning, until I formed my first band at fifteen.
-              </p>
-              <p>
-                Le Pig brought together the two worlds that obsessed me:
-                electronic music and heavy alternative rock. That collision became
-                my first step into composition and production, and later into
-                working with other artists.
-              </p>
-              <p>
-                After the band ended, I moved deeper into downtempo, drum &amp;
-                bass, hip hop and techno. Improvisation, analog tools and digital
-                processes remain at the center of how I work.
-              </p>
-              <p class="bio-ending">
-                From the most digital techno to the most organic downtempo, I want
-                every track to carry something real — beyond lyrics, beyond genre:
-                a feeling.
-              </p>
-            </div>
-          </div>
-
-          <aside class="practice-note" aria-labelledby="practice-title">
-            <p class="dual-eyebrow">
-              <span id="practice-title">Práctica digital</span>
-            </p>
-            <p>
-              La música es el centro, pero mi práctica también cruza diseño
-              sonoro, imagen, 3D y código creativo.
-            </p>
-            <div class="practice-tags" aria-label="Disciplinas creativas">
+          <div class="practice reveal d3">
+            <p>La música es el centro, pero mi práctica también cruza:</p>
+            <div class="tags">
               <span>Diseño sonoro</span><span>Imagen</span><span>3D</span><span>Código creativo</span>
             </div>
-          </aside>
+          </div>
         </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <section class="contact-section" id="contact" aria-labelledby="contact-title">
-        <div class="section-number" aria-hidden="true">03</div>
-        <p class="dual-eyebrow contact-eyebrow">
-          <span>Fechas · Colaboraciones · Producción</span>
-        </p>
-        <div class="translated-title contact-title-stack">
-          <h2 id="contact-title" lang="en">LET'S MAKE<br />IT REAL.</h2>
-        </div>
-        <a class="email-link" href="mailto:jota1988music@gmail.com">
-          jota1988music@gmail.com <span aria-hidden="true">↗</span>
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="idx">04</span>
+        <p class="eyebrow">Fechas · Colaboraciones · Producción</p>
+      </div>
+      <h2 class="reveal d1">LET'S MAKE<br>IT REAL.</h2>
+      <a class="email-link reveal d2" href="mailto:jota1988music@gmail.com">jota1988music@gmail.com ↗</a>
+      <div class="social-row reveal d3">
+        <a href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M7 10.5c3-1 7-1 10 .8M7.5 13.5c2.5-.8 6-.8 8.3.6M8 16.3c2-.6 4.8-.6 6.6.5"/></svg>Spotify
         </a>
+        <a href="https://jota1988.bandcamp.com/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M3 16.5h6.2L15.5 6H21l-6.3 10.5H3z"/></svg>Bandcamp
+        </a>
+        <a href="https://www.instagram.com/jota.1988/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="12" cy="12" r="3.8"/><circle cx="16.7" cy="7.3" r="1"/></svg>Instagram
+        </a>
+        <a href="https://youtube.com/theaudioexporter" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="3"/><path d="M10.5 9.5l5 2.5-5 2.5z" fill="currentColor" stroke="none"/></svg>YouTube
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
 
-        <div class="social-grid" aria-label="Redes y plataformas">
-          <a href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ" target="_blank" rel="noreferrer">
-            <span>Spotify</span><span aria-hidden="true">↗</span>
-          </a>
-          <a href="https://jota1988.bandcamp.com/" target="_blank" rel="noreferrer">
-            <span>Bandcamp</span><span aria-hidden="true">↗</span>
-          </a>
-          <a href="https://www.instagram.com/jota.1988/" target="_blank" rel="noreferrer">
-            <span>Instagram</span><span aria-hidden="true">↗</span>
-          </a>
-          <a href="https://youtube.com/theaudioexporter" target="_blank" rel="noreferrer">
-            <span>YouTube</span><span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </section>
-    </main>
+<footer class="wrap">
+  <p>Música electrónica independiente desde Buenos Aires. © 2026 Jota 1988</p>
+  <a href="#top" class="to-top">↑ Volver arriba</a>
+</footer>
 
-    <footer>
-      <a class="wordmark footer-mark" href="#top">JOTA 1988<span>.</span></a>
-      <p>Música electrónica independiente desde Buenos Aires.</p>
-      <p>© 2026 Jota 1988</p>
-    </footer>
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    <nav class="mobile-dock" aria-label="Navegación móvil">
-      <a href="#music">Música</a>
-      <a href="#about">Bio</a>
-      <a href="#contact">Contacto</a>
-    </nav>
-  </body>
+  // ---- progress bar ----
+  const progress = document.getElementById('progress');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    progress.style.width = scrolled + '%';
+  }
+  document.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
+  // ---- parallax hero image ----
+  const heroImg = document.getElementById('heroImg');
+  function parallax(){
+    if(reduceMotion) return;
+    const y = window.scrollY;
+    if(y < window.innerHeight * 1.2){
+      heroImg.style.transform = 'translateY(' + (y * 0.12) + 'px) scale(1.06)';
+    }
+  }
+  document.addEventListener('scroll', parallax, {passive:true});
+
+  // ---- scroll reveal ----
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in-view');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:.15, rootMargin:'0px 0px -60px 0px'});
+  revealEls.forEach(el => io.observe(el));
+
+  // ---- active nav highlight ----
+  const navLinks = document.querySelectorAll('[data-nav]');
+  const sections = ['music','discography','about','contact'].map(id => document.getElementById(id));
+  const navIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const link = document.querySelector('[data-nav][href="#' + e.target.id + '"]');
+      if(e.isIntersecting){
+        navLinks.forEach(l => l.classList.remove('active'));
+        link && link.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-45% 0px -45% 0px'});
+  sections.forEach(s => s && navIO.observe(s));
+
+  // ---- mobile menu ----
+  const toggle = document.getElementById('menuToggle');
+  const nav = document.getElementById('nav');
+  toggle.addEventListener('click', () => {
+    const open = nav.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+    toggle.textContent = open ? '✕' : '☰';
+  });
+  navLinks.forEach(l => l.addEventListener('click', () => {
+    nav.classList.remove('open');
+    toggle.setAttribute('aria-expanded', false);
+    toggle.textContent = '☰';
+  }));
+
+  // ---- ambient particle field ----
+  const canvas = document.getElementById('bgCanvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const COLORS = ['rgba(241,207,40,', 'rgba(244,241,233,', 'rgba(255,77,61,'];
+
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  function initParticles(){
+    const count = Math.min(60, Math.floor((window.innerWidth * window.innerHeight) / 22000));
+    particles = Array.from({length: count}, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: (Math.random() - 0.5) * 0.15,
+      r: Math.random() * 1.6 + 0.5,
+      c: COLORS[Math.floor(Math.random() * COLORS.length)]
+    }));
+  }
+  function drawParticles(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      if(!reduceMotion){
+        p.x += p.vx; p.y += p.vy;
+        if(p.x < 0) p.x = canvas.width; if(p.x > canvas.width) p.x = 0;
+        if(p.y < 0) p.y = canvas.height; if(p.y > canvas.height) p.y = 0;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.c + '0.5)';
+      ctx.fill();
+      for(let j = i + 1; j < particles.length; j++){
+        const q = particles[j];
+        const dx = p.x - q.x, dy = p.y - q.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 130){
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.strokeStyle = 'rgba(244,241,233,' + (0.08 * (1 - dist/130)) + ')';
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    if(!reduceMotion) requestAnimationFrame(drawParticles);
+  }
+  resizeCanvas();
+  initParticles();
+  drawParticles();
+  window.addEventListener('resize', () => { resizeCanvas(); initParticles(); if(reduceMotion) drawParticles(); });
+</script>
+</body>
 </html>
