@@ -155,13 +155,14 @@
 
   /* Spotify dock */
   .player-dock{position:fixed;left:0;right:0;bottom:0;z-index:70;background:#111112;border-top:1px solid var(--line);box-shadow:0 -8px 28px rgba(0,0,0,.3);padding:8px clamp(1.25rem,5vw,3rem)}
-  .player-inner{max-width:1180px;margin:auto;display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:.6rem;align-items:center}
+  .player-inner{max-width:1180px;margin:auto;position:relative}
   .player-embed{height:80px;overflow:hidden}
   .player-embed iframe{display:block;width:100%;height:100%;border:0}
   .player-dock.open .player-embed{height:min(352px,55vh)}
-  .player-toggle{height:44px;width:44px;border:1px solid var(--line);background:transparent;color:var(--fg);font-size:1.2rem;cursor:pointer}
-  .player-toggle:hover,.player-toggle:focus-visible{border-color:var(--yellow)}
-  @media(max-width:640px){.player-dock{padding:6px}.player-inner{gap:4px;grid-template-columns:minmax(0,1fr) 38px}.player-toggle{width:38px;height:38px}}
+  .player-open{position:absolute;inset:0;width:100%;border:0;background:transparent;cursor:pointer;z-index:1}
+  .player-open:focus-visible{outline:2px solid var(--yellow);outline-offset:-2px}
+  .player-dock.open .player-open{display:none}
+  @media(max-width:640px){.player-dock{padding:6px}}
 
   /* waveform divider */
   .waveform{display:flex;align-items:flex-end;gap:4px;height:34px;margin:0 0 1rem}
@@ -471,7 +472,7 @@
     <div class="player-embed" id="playerEmbed">
       <iframe id="spotifyFrame" src="https://open.spotify.com/embed/artist/7pJDetGhrQ6zCsnNLUoICQ?utm_source=generator&theme=0" title="Jota 1988 en Spotify" allow="autoplay; encrypted-media"></iframe>
     </div>
-    <button class="player-toggle" id="playerToggle" type="button" aria-label="Ver canciones" aria-expanded="false" aria-controls="playerEmbed" title="Ver canciones">⌃</button>
+    <button class="player-open" id="playerOpen" type="button" aria-label="Abrir reproductor de Spotify" aria-expanded="false" aria-controls="playerEmbed"></button>
   </div>
 </aside>
 
@@ -546,15 +547,26 @@
 
   // ---- Spotify dock ----
   const playerDock = document.getElementById('playerDock');
-  const playerToggle = document.getElementById('playerToggle');
+  const playerOpen = document.getElementById('playerOpen');
   const spotifyFrame = document.getElementById('spotifyFrame');
-  playerToggle.addEventListener('click', () => {
-    const open = playerDock.classList.toggle('open');
-    playerToggle.setAttribute('aria-expanded', String(open));
-    playerToggle.setAttribute('aria-label', open ? 'Contraer reproductor' : 'Ver canciones');
-    playerToggle.title = open ? 'Contraer reproductor' : 'Ver canciones';
-    playerToggle.textContent = open ? '⌄' : '⌃';
-    spotifyFrame.style.height = open ? '352px' : '80px';
+  function closePlayer(){
+    playerDock.classList.remove('open');
+    playerOpen.setAttribute('aria-expanded', 'false');
+    spotifyFrame.style.height = '80px';
+  }
+  playerOpen.addEventListener('click', () => {
+    playerDock.classList.add('open');
+    playerOpen.setAttribute('aria-expanded', 'true');
+    spotifyFrame.style.height = '352px';
+  });
+  document.addEventListener('pointerdown', (event) => {
+    if(playerDock.classList.contains('open') && !playerDock.contains(event.target)) closePlayer();
+  });
+  document.addEventListener('keydown', (event) => {
+    if(event.key === 'Escape' && playerDock.classList.contains('open')){
+      closePlayer();
+      playerOpen.focus();
+    }
   });
 
   // ---- ambient particle field ----
