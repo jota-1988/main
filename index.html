@@ -29,6 +29,7 @@
     line-height:1.6;
     overflow-x:hidden;
     position:relative;
+    padding-bottom:60px;
   }
   ::selection{background:var(--yellow);color:#0c0c0d}
   a{color:inherit;text-decoration:none}
@@ -151,6 +152,17 @@
     transition:border-color .25s ease,color .25s ease;
   }
   .link-out:hover{color:var(--yellow);border-color:var(--yellow)}
+
+  /* Spotify dock */
+  .player-dock{position:fixed;left:0;right:0;bottom:0;z-index:70;background:#111112;border-top:1px solid var(--line);box-shadow:0 -8px 28px rgba(0,0,0,.3)}
+  .player-bar{height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0 clamp(1.25rem,5vw,3rem)}
+  .player-bar strong{font-family:'Space Grotesk',sans-serif;font-size:.95rem}
+  .player-toggle{background:none;border:1px solid var(--line);color:var(--fg);font-family:'IBM Plex Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;padding:.45rem .8rem;cursor:pointer}
+  .player-toggle:hover,.player-toggle:focus-visible{border-color:var(--yellow)}
+  .player-panel{height:0;overflow:hidden;visibility:hidden;transition:height .25s ease,visibility .25s ease}
+  .player-dock.open .player-panel{height:min(352px,55vh);visibility:visible}
+  .player-panel iframe{width:100%;height:100%;border:0;display:block}
+  @media (prefers-reduced-motion:reduce){.player-panel{transition:none}}
 
   /* waveform divider */
   .waveform{display:flex;align-items:flex-end;gap:4px;height:34px;margin:0 0 1rem}
@@ -275,7 +287,6 @@
   <div class="nav-inner">
     <nav id="nav">
       <ul>
-        <li><a href="#music" data-nav>Música</a></li>
         <li><a href="#discography" data-nav>Discografía</a></li>
         <li><a href="#about" data-nav>Bio</a></li>
         <li><a href="#contact" data-nav>Contacto</a></li>
@@ -294,35 +305,10 @@
         <h1 class="reveal d1"><span>JOTA</span> <span>1988</span></h1>
         
         <p class="hero-meta reveal d2"><strong>Buenos Aires, Argentina</strong> · Techno · Downtempo · Experimentación</p>
-        <a href="#music" class="btn reveal d3">↓ Escuchar</a>
+        <a href="#discography" class="btn reveal d3">↓ Discografía</a>
       </div>
       <div class="hero-media reveal d2">
         <img id="heroImg" src="https://jota-1988.github.io/main/assets/images/jota-portrait.webp" alt="Retrato de Jota 1988 frente a cámara">
-      </div>
-    </div>
-  </section>
-
-  <section id="music">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="idx">01</span>
-        <h2>Música</h2>
-      </div>
-      <div class="waveform reveal" aria-hidden="true">
-        <i style="animation-delay:.0s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i>
-        <i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.05s"></i>
-        <i style="animation-delay:.25s"></i><i style="animation-delay:.12s"></i>
-      </div>
-      <div class="music-grid">
-        <div class="reveal">
-
-        </div>
-        <div class="reveal d1">
-          <div class="embed-frame">
-            <iframe src="https://open.spotify.com/embed/artist/7pJDetGhrQ6zCsnNLUoICQ?utm_source=generator&theme=0" title="Jota 1988 en Spotify" allow="encrypted-media"></iframe>
-          </div>
-          <a class="link-out" href="https://open.spotify.com/artist/7pJDetGhrQ6zCsnNLUoICQ" target="_blank" rel="noopener">Abrir perfil completo ↗</a>
-        </div>
       </div>
     </div>
   </section>
@@ -362,7 +348,7 @@
     </div>
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="idx">02</span>
+        <span class="idx">01</span>
         <h2>Discografía</h2>
       </div>
 
@@ -431,7 +417,7 @@
   <section id="about">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="idx">03</span>
+        <span class="idx">02</span>
         <h2>Bio</h2>
       </div>
       <div class="about-grid">
@@ -458,7 +444,7 @@
   <section id="contact" class="contact">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="idx">04</span>
+        <span class="idx">03</span>
         <h2>Contacto</h2>
       </div>
 
@@ -480,6 +466,16 @@
     </div>
   </section>
 </main>
+
+<aside class="player-dock" id="playerDock" aria-label="Reproductor de Spotify">
+  <div class="player-bar">
+    <strong>JOTA 1988 · Spotify</strong>
+    <button class="player-toggle" id="playerToggle" type="button" aria-expanded="false" aria-controls="playerPanel">Abrir reproductor ↑</button>
+  </div>
+  <div class="player-panel" id="playerPanel">
+    <iframe src="https://open.spotify.com/embed/artist/7pJDetGhrQ6zCsnNLUoICQ?utm_source=generator&theme=0" title="Jota 1988 en Spotify" allow="autoplay; encrypted-media" loading="lazy"></iframe>
+  </div>
+</aside>
 
 <footer class="wrap">
   <p>© 2026 Jota 1988</p>
@@ -524,7 +520,7 @@
 
   // ---- active nav highlight ----
   const navLinks = document.querySelectorAll('[data-nav]');
-  const sections = ['music','discography','about','contact'].map(id => document.getElementById(id));
+  const sections = ['discography','about','contact'].map(id => document.getElementById(id));
   const navIO = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       const link = document.querySelector('[data-nav][href="#' + e.target.id + '"]');
@@ -549,6 +545,15 @@
     toggle.setAttribute('aria-expanded', false);
     toggle.textContent = '☰';
   }));
+
+  // ---- Spotify dock ----
+  const playerDock = document.getElementById('playerDock');
+  const playerToggle = document.getElementById('playerToggle');
+  playerToggle.addEventListener('click', () => {
+    const open = playerDock.classList.toggle('open');
+    playerToggle.setAttribute('aria-expanded', String(open));
+    playerToggle.textContent = open ? 'Cerrar reproductor ↓' : 'Abrir reproductor ↑';
+  });
 
   // ---- ambient particle field ----
   const canvas = document.getElementById('bgCanvas');
