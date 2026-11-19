@@ -155,10 +155,13 @@
 
   /* Spotify dock */
   .player-dock{position:fixed;left:0;right:0;bottom:0;z-index:70;background:#111112;border-top:1px solid var(--line);box-shadow:0 -8px 28px rgba(0,0,0,.3)}
-  .player-bar{height:60px;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0 clamp(1.25rem,5vw,3rem)}
+  .player-bar{height:60px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;padding:0 clamp(1.25rem,5vw,3rem)}
   .player-bar strong{font-family:'Space Grotesk',sans-serif;font-size:.95rem}
-  .player-toggle{background:none;border:1px solid var(--line);color:var(--fg);font-family:'IBM Plex Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;padding:.45rem .8rem;cursor:pointer}
+  .player-toggle{justify-self:end;background:none;border:1px solid var(--line);color:var(--fg);font-family:'IBM Plex Mono',monospace;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;padding:.45rem .8rem;cursor:pointer}
   .player-toggle:hover,.player-toggle:focus-visible{border-color:var(--yellow)}
+  .player-play{width:40px;height:40px;border:1px solid var(--yellow);border-radius:50%;background:transparent;color:var(--yellow);font-size:1.1rem;cursor:pointer;display:grid;place-items:center}
+  .player-play:disabled{opacity:.45;cursor:wait}
+  .player-play:hover:not(:disabled){background:var(--yellow);color:var(--bg)}
   .player-panel{height:0;overflow:hidden;visibility:hidden;transition:height .25s ease,visibility .25s ease}
   .player-dock.open .player-panel{height:min(352px,55vh);visibility:visible}
   .player-panel iframe{width:100%;height:100%;border:0;display:block}
@@ -470,10 +473,11 @@
 <aside class="player-dock" id="playerDock" aria-label="Reproductor de Spotify">
   <div class="player-bar">
     <strong>JOTA 1988 · Spotify</strong>
+    <button class="player-play" id="playerPlay" type="button" aria-label="Reproducir" title="Reproducir" disabled>▶</button>
     <button class="player-toggle" id="playerToggle" type="button" aria-expanded="false" aria-controls="playerPanel">Abrir reproductor ↑</button>
   </div>
   <div class="player-panel" id="playerPanel">
-    <iframe src="https://open.spotify.com/embed/artist/7pJDetGhrQ6zCsnNLUoICQ?utm_source=generator&theme=0" title="Jota 1988 en Spotify" allow="autoplay; encrypted-media"></iframe>
+    <div id="spotifyEmbed"></div>
   </div>
 </aside>
 
@@ -555,6 +559,25 @@
     playerToggle.textContent = open ? 'Cerrar reproductor ↓' : 'Abrir reproductor ↑';
   });
 
+  // ---- Spotify playback controls ----
+  const playerPlay = document.getElementById('playerPlay');
+  window.onSpotifyIframeApiReady = (IFrameAPI) => {
+    IFrameAPI.createController(
+      document.getElementById('spotifyEmbed'),
+      {uri:'spotify:artist:7pJDetGhrQ6zCsnNLUoICQ',width:'100%',height:'352',theme:'dark'},
+      (controller) => {
+        controller.addListener('ready', () => { playerPlay.disabled = false; });
+        controller.addListener('playback_update', (event) => {
+          const paused = event.data.isPaused;
+          playerPlay.textContent = paused ? '▶' : '❚❚';
+          playerPlay.setAttribute('aria-label', paused ? 'Reproducir' : 'Pausar');
+          playerPlay.title = paused ? 'Reproducir' : 'Pausar';
+        });
+        playerPlay.addEventListener('click', () => controller.togglePlay());
+      }
+    );
+  };
+
   // ---- ambient particle field ----
   const canvas = document.getElementById('bgCanvas');
   const ctx = canvas.getContext('2d');
@@ -610,5 +633,6 @@
   drawParticles();
   window.addEventListener('resize', () => { resizeCanvas(); initParticles(); if(reduceMotion) drawParticles(); });
 </script>
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
 </body>
 </html>
